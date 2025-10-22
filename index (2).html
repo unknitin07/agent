@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Workers - Earn Daily Salary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-dark-red: #5C1F1F;
+            --secondary-red: #8B2F2F;
+            --accent-green: #2ECC71;
+            --background-dark: #1a0f0f;
+            --text-white: #FFFFFF;
+            --text-gray: #CCCCCC;
+            --card-bg: rgba(92, 31, 31, 0.15);
+            --border-color: rgba(139, 47, 47, 0.3);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-dark) 0%, #2a1515 100%);
+            color: var(--text-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(92, 31, 31, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .hero-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 60px 40px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-white) 0%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%);
+            color: var(--text-white);
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(46, 204, 113, 0.4);
+        }
+        
+        .salary-icon {
+            font-size: 1.3rem;
+        }
+        
+        /* Benefits Section */
+        .benefits {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.3s forwards;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .benefit-item {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .benefit-item:nth-child(1) { animation-delay: 0.1s; }
+        .benefit-item:nth-child(2) { animation-delay: 0.2s; }
+        .benefit-item:nth-child(3) { animation-delay: 0.3s; }
+        .benefit-item:nth-child(4) { animation-delay: 0.4s; }
+        
+        .benefit-item:hover {
+            transform: translateY(-10px);
+            background: rgba(46, 204, 113, 0.05);
+            border-color: rgba(46, 204, 113, 0.2);
+        }
+        
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .benefit-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--accent-green);
+        }
+        
+        .benefit-desc {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            padding: 80px 0;
+            background: rgba(92, 31, 31, 0.05);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+        
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .testimonial-card:nth-child(1) { animation-delay: 0.2s; }
+        .testimonial-card:nth-child(2) { animation-delay: 0.4s; }
+        .testimonial-card:nth-child(3) { animation-delay: 0.6s; }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .author-info h4 {
+            font-weight: 600;
+            color: var(--text-white);
+        }
+        
+        .author-info p {
+            color: var(--accent-green);
+            font-size: 0.9rem;
+        }
+        
+        .rating {
+            color: #ffd700;
+            font-size: 1.1rem;
+        }
+        
+        /* Target Audience Section */
+        .target-audience {
+            padding: 80px 0;
+        }
+        
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+        
+        .audience-item {
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 15px;
+            background: rgba(139, 47, 47, 0.1);
+            border: 1px solid rgba(139, 47, 47, 0.2);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInScale 0.8s ease-out forwards;
+        }
+        
+        .audience-item:nth-child(1) { animation-delay: 0.1s; }
+        .audience-item:nth-child(2) { animation-delay: 0.2s; }
+        .audience-item:nth-child(3) { animation-delay: 0.3s; }
+        .audience-item:nth-child(4) { animation-delay: 0.4s; }
+        
+        .audience-item:hover {
+            transform: scale(1.05);
+            background: rgba(139, 47, 47, 0.15);
+            border-color: var(--accent-green);
+        }
+        
+        .audience-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .audience-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-white);
+        }
+        
+        .audience-desc {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Final CTA Section */
+        .final-cta {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(92, 31, 31, 0.1) 0%, rgba(139, 47, 47, 0.05) 100%);
+        }
+        
+        .final-cta-text {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.2s forwards;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .stat-item:nth-child(1) { animation-delay: 0.3s; }
+        .stat-item:nth-child(2) { animation-delay: 0.4s; }
+        .stat-item:nth-child(3) { animation-delay: 0.5s; }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 60px 0 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        .footer-links {
+            margin: 20px 0;
+        }
+        
+        .footer-links a {
+            color: var(--accent-green);
+            text-decoration: none;
+            margin: 0 20px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--text-white);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3); }
+            50% { box-shadow: 0 10px 30px rgba(46, 204, 113, 0.5); }
+            100% { box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .hero-card {
+                padding: 40px 30px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .final-cta-text {
+                font-size: 1.5rem;
+            }
+            
+            .stats {
+                gap: 30px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .testimonials-grid,
+            .audience-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-card">
+                <h1 class="hero-title">Earn Daily Salary as an Agent Worker</h1>
+                <p class="hero-subtitle">
+                    Join the best platform for Telegram channel owners, Instagram influencers, and ads runners. 
+                    Get guaranteed daily salary with top-tier support.
+                </p>
+                <a href="https://t.me/+lhfD8ruW63A2ZmY1" target="_blank" class="cta-button">
+                    <span class="salary-icon">💰</span>
+                    GET SALARY
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Why Choose Agent Workers?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <span class="benefit-icon">💰</span>
+                    <h3 class="benefit-title">Daily Salary System</h3>
+                    <p class="benefit-desc">Get paid daily for your work</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🎯</span>
+                    <h3 class="benefit-title">Best Support 24/7</h3>
+                    <p class="benefit-desc">Round the clock assistance</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">💳</span>
+                    <h3 class="benefit-title">Easy Withdrawal</h3>
+                    <p class="benefit-desc">Quick and hassle-free payouts</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">📈</span>
+                    <h3 class="benefit-title">Proven Results</h3>
+                    <p class="benefit-desc">Thousands of satisfied workers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Agent Workers Say</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "Earned ₹10,000 in my first week! Amazing support team and daily payouts."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <h4>Rajesh Kumar</h4>
+                            <p>Telegram Channel Owner</p>
+                        </div>
+                        <div class="rating">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "Best platform for influencers. Daily payouts guaranteed and great support!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <h4>Priya Sharma</h4>
+                            <p>Instagram Influencer</p>
+                        </div>
+                        <div class="rating">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "Running ads for them has been profitable. Excellent salary system and timely payments!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <h4>Amit Singh</h4>
+                            <p>Facebook Ads Runner</p>
+                        </div>
+                        <div class="rating">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Audience Section -->
+    <section class="target-audience">
+        <div class="container">
+            <h2 class="section-title">Perfect For</h2>
+            <div class="audience-grid">
+                <div class="audience-item">
+                    <span class="audience-icon">✈️</span>
+                    <h3 class="audience-title">Telegram Channel Owners</h3>
+                    <p class="audience-desc">Monetize your channel reach</p>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-icon">📱</span>
+                    <h3 class="audience-title">Instagram Page Owners</h3>
+                    <p class="audience-desc">Earn from your followers</p>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-icon">⭐</span>
+                    <h3 class="audience-title">Social Media Influencers</h3>
+                    <p class="audience-desc">Turn influence into income</p>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-icon">🎯</span>
+                    <h3 class="audience-title">Ads Runners</h3>
+                    <p class="audience-desc">Facebook &amp; Google ads experts</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <h2 class="final-cta-text">Join thousands of agent workers earning daily</h2>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">5000+</span>
+                    <span class="stat-label">Active Workers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">₹50L+</span>
+                    <span class="stat-label">Total Paid</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">99%</span>
+                    <span class="stat-label">Satisfaction Rate</span>
+                </div>
+            </div>
+            
+            <a href="https://t.me/+lhfD8ruW63A2ZmY1" target="_blank" class="cta-button">
+                <span class="salary-icon">🚀</span>
+                GET SALARY NOW
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://t.me/+lhfD8ruW63A2ZmY1" target="_blank">Join Telegram</a>
+                <a href="#">Support</a>
+                <a href="#">FAQ</a>
+            </div>
+            <div class="footer-content">
+                <p>&copy; 2025 Agent Workers. All rights reserved. Start earning today!</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll(
+                '.benefit-item, .testimonial-card, .audience-item, .stat-item'
+            );
+            
+            animatedElements.forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        });
+
+        // Enhanced button click tracking
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Add a subtle click animation
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Add floating particles effect (subtle)
+        function createFloatingParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.width = '4px';
+            particle.style.height = '4px';
+            particle.style.backgroundColor = 'rgba(46, 204, 113, 0.3)';
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '1';
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: 'translateY(0px)', opacity: 0 },
+                { transform: 'translateY(-100vh)', opacity: 1 },
+                { transform: 'translateY(-120vh)', opacity: 0 }
+            ], {
+                duration: 10000 + Math.random() * 5000,
+                easing: 'linear'
+            });
+            
+            animation.onfinish = () => particle.remove();
+        }
+
+        // Create particles occasionally
+        setInterval(createFloatingParticle, 3000);
+    </script>
+</body>
+</html>
